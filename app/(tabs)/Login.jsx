@@ -26,7 +26,7 @@ const Login = () => {
       });
 
       // Navigate to the home screen or dashboard
-      navigation.navigate('Home1');
+      navigation.navigate('Home');
     } catch (error) {
       let errorMessage;
       switch (error.code) {
