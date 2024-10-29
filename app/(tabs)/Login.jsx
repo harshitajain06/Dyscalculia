@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const Login = () => {
   const navigation = useNavigation();
+  const [user, loading, error] = useAuthState(auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isFocused, setIsFocused] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      navigation.replace('Home');
+    }
+  }, [user]);
 
   const handleLogin = async () => {
     try {

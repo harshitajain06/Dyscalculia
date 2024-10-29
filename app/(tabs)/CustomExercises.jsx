@@ -2,24 +2,27 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
 const data = [
-  { id: '1', name: 'Lorem Ipsum' },
-  { id: '2', name: 'Lorem Ipsum' },
-  { id: '3', name: 'Lorem Ipsum' },
-  { id: '4', name: 'Lorem Ipsum' },
+  { id: '1', name: 'Addition', route: 'AdditionQuiz' },
+  { id: '2', name: 'Subtraction', route: 'SubtractionQuiz' },
+  { id: '3', name: 'Multiplication', route: 'MultiplicationQuiz' },
+  { id: '4', name: 'Division', route: 'DivisionQuiz' },
 ];
 
 const CustomExercises = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate(item.route)} // Navigate to the respective quiz
+    >
       <View style={styles.placeholderImage} />
       <Text style={styles.text}>{item.name}</Text>
       <TouchableOpacity>
         <Text style={styles.heart}>❤️</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
