@@ -1,23 +1,32 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const data = [
-  { id: '1', name: 'Addition', route: 'AdditionQuiz' },
-  { id: '2', name: 'Subtraction', route: 'SubtractionQuiz' },
-  { id: '3', name: 'Multiplication', route: 'MultiplicationQuiz' },
-  { id: '4', name: 'Division', route: 'DivisionQuiz' },
+  { id: '1', name: 'Addition', route: 'AdditionQuiz', icon: 'plus' },
+  { id: '2', name: 'Subtraction', route: 'SubtractionQuiz', icon: 'minus' },
+  { id: '3', name: 'Multiplication', route: 'MultiplicationQuiz', icon: 'close' },
+  { id: '4', name: 'Division', route: 'DivisionQuiz', icon: 'division' },
 ];
 
 const CustomExercises = () => {
   const navigation = useNavigation();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter exercises based on search query
+  const filteredData = data.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
       onPress={() => navigation.navigate(item.route)} // Navigate to the respective quiz
     >
-      <View style={styles.placeholderImage} />
+      <View style={styles.placeholderImage}>
+        <Icon name={item.icon} size={40} color="#333" />
+      </View>
       <Text style={styles.text}>{item.name}</Text>
       <TouchableOpacity>
         <Text style={styles.heart}>❤️</Text>
@@ -29,15 +38,18 @@ const CustomExercises = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Custom exercises just for you!</Text>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>Filter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.searchButton}>
-          <Text style={styles.searchText}>🔍</Text>
-        </TouchableOpacity>
+        <View style={styles.searchContainer}>
+          <Icon name="magnify" size={24} color="#333" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search exercises..."
+            value={searchQuery}
+            onChangeText={text => setSearchQuery(text)}
+          />
+        </View>
       </View>
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         numColumns={2}
@@ -61,26 +73,25 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 16,
   },
-  filterButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#4CAF50',
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+    borderColor: '#ddd',
+    borderWidth: 1,
     borderRadius: 8,
+    flex: 1,
+    paddingHorizontal: 10,
   },
-  filterText: {
-    color: '#fff',
+  searchIcon: {
+    marginRight: 8,
   },
-  searchButton: {
-    backgroundColor: '#FF6347',
-    padding: 10,
-    borderRadius: 50,
-  },
-  searchText: {
-    fontSize: 18,
-    color: '#fff',
+  searchInput: {
+    flex: 1,
+    height: 40,
   },
   grid: {
     justifyContent: 'space-between',
@@ -96,6 +107,8 @@ const styles = StyleSheet.create({
   placeholderImage: {
     width: 80,
     height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#d3d3d3',
     borderRadius: 10,
   },
